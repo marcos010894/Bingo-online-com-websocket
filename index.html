@@ -412,6 +412,7 @@
         var vencedor3 = false;
         let interval;
         var ids = [];
+        var started = false;
         var url = 'https://eaglesoftware.com.br/apibingo/'
         function createBingoCard(numbers) {
             const card = document.createElement("div");
@@ -687,15 +688,14 @@
 
                 });
             }).then(() => {
-                setTimeout(() => {
-                    window.location.reload()
-                }, 5000)
+                console.log('bingo deletado')
+                started = true
             });
         }
     </script>
     <script>
         var quanty_start = "";
-        var started = false;
+
         var url = "https://eaglesoftware.com.br/apibingo/";
 
         function fetchDataQuanties() {
