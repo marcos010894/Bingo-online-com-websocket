@@ -27,6 +27,7 @@ wss.on("connection", (ws) => {
       setInterval(() => {
         if (drawnNumbers.length >= 90) {
           drawnNumbers = [];
+          started = false;
         }
         drawNumber(wss, drawnNumbers);
       }, 5000); // Sorteia um número a cada 5 segundos
