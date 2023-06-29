@@ -57,4 +57,4 @@ function drawNumber(wss, drawnNumbers) {
   return randomNumber;
 }
 
-server.listen(8080);
+server.listen(8000);
