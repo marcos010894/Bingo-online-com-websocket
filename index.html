@@ -412,7 +412,7 @@
         var vencedor3 = false;
         let interval;
         var ids = [];
-        var url = 'eaglesoftware.com.br/apibingo/'
+        var url = 'http://eaglesoftware.com.br/apibingo/'
         function createBingoCard(numbers) {
             const card = document.createElement("div");
             card.className = "bingo-card";
@@ -696,7 +696,7 @@
     <script>
         var quanty_start = "";
         var started = false;
-        var url = "eaglesoftware.com.br/apibingo/";
+        var url = "http://eaglesoftware.com.br/apibingo/";
 
         function fetchDataQuanties() {
             $.get(url + "verifyQuantitysstart.php", function (data) {
