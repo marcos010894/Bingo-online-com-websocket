@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="pt">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bingo de 90 números</title>
+    <link rel="stylesheet" href="assets/css/styled.css">
+</head>
+
+<body
+    style=" background-image: url('https://img.freepik.com/fotos-premium/fundo-verde-escuro-grunge-textura-de-papel-de-design-antigo-com-espaco-de-copia-e-espaco-para-texto_213524-614.jpg');background-size: cover;">
+    <div id="modalAguardando">
+        <h1> Iniciaremos em instantes... </h1>
+    </div>
+
+    <div style="display: none;" id="modalAguardandoContagem">
+        <img src="load.gif" alt="">
+    </div>
+
+    <div style="display: none;" id="modalAguardandoencerrado">
+        <h1> Bingo Finalizado, recalculando dados e reestartando ... </h1>
+    </div>
+    <div id="headers">
+        <div class="premio-container">
+            <p>PREMIO FINAL</p>
+            <div class="valor">
+                <h2>R$ <span id="bingo"> 2.500.00 </span></h2>
+            </div>
+        </div>
+        <div>
+            <div
+                style="height: 90px; width: 200px; margin-left: 60px; background-color: #077a03; border: 2px solid #dbd9c4; border-radius: 25px; color: white; display: flex; justify-content: center; align-items: center; flex-direction: column;">
+                <p style="margin: 0;">Hora Atual</p>
+                <div
+                    style="margin: 0;width: 90%; height: 70%; border: 1px solid #a69905; background-color: rgb(1, 1, 26); border-radius: 10px; display: flex; justify-content: center; align-items: center;">
+                    <h2 id="currentTime"> </h2>
+                </div>
+            </div>
+        </div>
+
+        <div>
+
+            <div
+                style="height: 90px; width: 200px; margin-left: 60px; background-color: #077a03; border: 2px solid #dbd9c4; border-radius: 25px; color: white; display: flex; justify-content: center; align-items: center; flex-direction: column;">
+                <p style="margin: 0;">N* Sorteio</p>
+                <div
+                    style="margin: 0;width: 90%; height: 70%; border: 1px solid #a69905; background-color: rgb(1, 1, 26); border-radius: 10px; display: flex; justify-content: center; align-items: center;">
+                    <h2 id="numeroBingo"> 000001 </h2>
+                </div>
+            </div>
+        </div>
+
+        <div>
+
+            <div
+                style="height: 90px; width: 200px; margin-left: 60px; background-color: #077a03; border: 2px solid #dbd9c4; border-radius: 25px; color: white; display: flex; justify-content: center; align-items: center; flex-direction: column;">
+                <p style="margin: 0;">CUMPOM</p>
+                <div
+                    style="margin: 0;width: 90%; height: 70%; border: 1px solid #a69905; background-color: rgb(1, 1, 26); border-radius: 10px; display: flex; justify-content: center; align-items: center;">
+                    <h2 id="cumpomvalor"> R$ 1,00 </h2>
+                </div>
+            </div>
+        </div>
+
+        <div>
+
+            <div
+                style="height: 90px; width: 200px; margin-left: 60px; background-color: #077a03; border: 2px solid #dbd9c4; border-radius: 25px; color: white; display: flex; justify-content: center; align-items: center; flex-direction: column;">
+                <p style="margin: 0;">Local</p>
+                <div
+                    style="margin: 0;width: 90%; height: 70%; border: 1px solid #a69905; background-color: rgb(1, 1, 26); border-radius: 10px; display: flex; justify-content: center; align-items: center;">
+                    <h2 id=""> Online </h2>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="content">
+        <div>
+            <div
+                style="height: 90px; width: 250px; background-color: #077a03; border: 2px solid #EDE04E; border-radius: 25px; color: white; display: flex; justify-content: center; align-items: center; flex-direction: column; margin-top: 25px;">
+                <p style="margin: 0;">Premio 1</p>
+                <div
+                    style="margin: 0;width: 90%; height: 70%; background-color: black; border-radius: 10px; display: flex; justify-content: center; align-items: center;">
+                    <h2> R$ <span id="quadra"> 2.500.00 </span></h2>
+                </div>
+            </div>
+
+            <div
+                style="height: 90px; width: 250px; background-color: #077a03; border: 2px solid #EDE04E; border-radius: 25px; color: white; display: flex; justify-content: center; align-items: center; flex-direction: column; margin-top: 25px;">
+                <p style="margin: 0;">Premio 2</p>
+                <div
+                    style="margin: 0;width: 90%; height: 70%; background-color: black; border-radius: 10px; display: flex; justify-content: center; align-items: center;">
+                    <h2> R$<span id="linha"> 2.500.00 </span> </h2>
+                </div>
+            </div>
+        </div>
+        <div style="width: 40%; display: flex; margin-top: 50px; align-items: center; flex-direction: column;">
+            <div id="numbersAntigos" style="display:flex;">
+                <div class="bola-sinucaAntiga" id="numberantigoone">-</div>
+                <div class="bola-sinucaAntiga" id="numberantigotwo">-</div>
+                <div class="bola-sinucaAntiga" id="numberantigothree">-</div>
+                <div class="bola-sinucaAntiga" id="numberantigofour">-</div>
+            </div>
+            <div class="big-number bola-sinuca" id="bigNumber"></div>
+        </div>
+        <div style="width: 60%; display: flex; justify-content: flex-end;">
+            <div class="all-numbers" id="allNumbers"></div>
+        </div>
+    </div>
+    <div style="display: flex; justify-content: flex-end;">
+        <div
+            style="width: 50%; border-radius: 10px; border: 1px solid #EDE04E; background-color: #007637; height: 100%;color: white; text-align: center; ">
+            <h1>Vencedores:</h1>
+            <div>PREMIO 1: <br>
+                <div id="vencedor1"></div> ...
+            </div>
+            <div>PREMIO 2: <br>
+                <div id="vencedor2"></div> ...
+            </div>
+            <div>PREMIO 3: <br>
+                <div id="vencedor3"></div> ...
+            </div>
+        </div>
+        <div class="cards-container" id="bingoCards"></div>
+
+
+        <audio id="audioParabens" src="effect.mp3" type="audio/mpeg"></audio>
+
+
+        <div class="last-numbers" style="display: none;">
+            <h3>Últimos números sorteados</h3>
+            <ol id="lastNumbers"></ol>
+        </div>
+    </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="assets/js/index.js"></script>
+    <script src="assets/js/realtimejs.js"></script>
+</body>
+
+</html>

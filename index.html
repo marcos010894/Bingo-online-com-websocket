@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="pt">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bingo de 90 números</title>
+    <link rel="stylesheet" href="assets/css/styled.css">
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #e74c3c;
+            --text-color: #ffffff;
+            --background-color: #ecf0f1;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            position: relative;
+            background-color: var(--background-color);
+            display: flex;
+            flex-direction: column;
+            flex-grow: inherit;
+            flex: 2;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        h3 {
+            color: var(--primary-color);
+        }
+
+        .bingo-card {
+            border: 1px solid var(--primary-color);
+            padding: 10px;
+            margin: 5px;
+            width: 160px;
+            border-radius: 10px;
+            background-color: green;
+            border: 1px solid #EDE04E;
+        }
+
+        .bingo-cell {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            line-height: 30px;
+            text-align: center;
+            border: 1px solid var(--primary-color);
+            border-radius: 5px;
+            background-color: white;
+            color: black;
+        }
+
+        .selected {
+            background-color: var(--accent-color);
+        }
+
+        .last-numbers {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+        }
+
+        .prizes {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+        }
+
+        .content {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-around;
+        }
+
+        .cards-container {
+            width: 40%;
+            align-items: center;
+            justify-content: center;
+            height: 250px;
+            overflow-y: scroll;
+            padding: 10px;
+            display: flex;
+            flex-wrap: wrap;
+            border-radius: 10px;
+        }
+
+        .all-numbers {
+            display: flex;
+            flex-wrap: wrap;
+            margin-bottom: 30px;
+            width: 780px;
+            margin-top: 52px;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .number {
+            display: inline-block;
+            width: 70px;
+            height: 32px;
+            line-height: 30px;
+            text-align: center;
+            border: 1px solid var(--primary-color);
+            margin: 1px;
+            background-color: var(--secondary-color);
+            border-radius: 5px;
+            color: var(--text-color);
+            border: 1px solid #EDE04E;
+            background-color: #007637;
+        }
+
+        .drawn {
+            background-color: var(--accent-color);
+        }
+
+        .big-number {
+
+            background-color: var(--accent-color);
+            color: var(--text-color);
+            width: 100px;
+            height: 100px;
+            line-height: 100px;
+            text-align: center;
+            border-radius: 50%;
+            font-size: 2em;
+            display: none;
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        button {
+            background-color: var(--secondary-color);
+            border: none;
+            color: var(--text-color);
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 10px 5px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: var(--accent-color);
+        }
+
+        .bola-sinuca {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: Arial, sans-serif;
+            font-weight: bold;
+            font-size: 32px;
+            color: #FFF;
+            background: radial-gradient(circle at 50%, #070, #000);
+            box-shadow: inset 0 0 5px #000, 0 0 5px #000;
+            position: relative;
+        }
+
+        .bola-sinuca:after {
+            content: '';
+            width: 30%;
+            height: 30%;
+            border-radius: 50%;
+            background: radial-gradient(circle at 50%, #FFF, transparent);
+            position: absolute;
+            top: 10%;
+            left: 10%;
+            opacity: 0.5;
+        }
+
+        .bola-sinucaAntiga {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: Arial, sans-serif;
+            font-weight: bold;
+            font-size: 32px;
+            color: #FFF;
+            background: radial-gradient(circle at 50%, #070, #000);
+            box-shadow: inset 0 0 5px #000, 0 0 5px #000;
+            position: relative;
+        }
+
+        .bola-sinucaAntiga:after {
+            content: '';
+            width: 30%;
+            height: 30%;
+            border-radius: 50%;
+            background: radial-gradient(circle at 50%, #FFF, transparent);
+            position: absolute;
+            top: 10%;
+            left: 10%;
+            opacity: 0.5;
+        }
+
+        #headers {
+            height: 15%;
+            display: flex;
+        }
+
+        #numbersAntigos {
+            margin-bottom: 25px;
+        }
+
+        .premio-container {
+            height: 90px;
+            width: 250px;
+            background-color: #7a7003;
+            background-image: url('https://i.imgur.com/vY2Qq3j.jpg');
+            border-radius: 25px;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+        }
+
+        .premio-container p {
+            font-family: Arial, sans-serif;
+            font-size: 18px;
+            font-weight: bold;
+            margin: 0;
+        }
+
+        .premio-container .valor {
+            margin: 0;
+            width: 90%;
+            height: 70%;
+            background-color: black;
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: inset 0px 4px 6px rgba(0, 0, 0, 0.2);
+        }
+
+        .premio-container .valor h2 {
+            font-family: Arial, sans-serif;
+            font-size: 28px;
+            font-weight: bold;
+            margin: 0;
+            color: #f1c40f;
+        }
+
+        #modalawait,
+        #modalawaitCount,
+        #modalawaitencerrado {
+            width: 100vw;
+            height: 100vh;
+            position: absolute;
+            z-index: 2000;
+            background-color: rgba(255, 255, 255, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+    </style>
+</head>
+
+<body
+    style=" background-image: url('https://img.freepik.com/fotos-premium/fundo-verde-escuro-grunge-textura-de-papel-de-design-antigo-com-espaco-de-copia-e-espaco-para-texto_213524-614.jpg');background-size: cover;">
+    <div id="modalawait">
+        <h1> Iniciaremos em instantes... </h1>
+    </div>
+
+    <div style="display: none;" id="modalawaitCount">
+        <img src="load.gif" alt="">
+    </div>
+
+    <div style="display: none;" id="modalawaitencerrado">
+        <h1> Bingo Finalizado, recalculando dados e reestartando ... </h1>
+    </div>
+    <div id="headers">
+        <div class="premio-container">
+            <p>PREMIO FINAL</p>
+            <div class="valor">
+                <h2>R$ <span id="bingo"> 2.500.00 </span></h2>
+            </div>
+        </div>
+        <div>
+            <div
+                style="height: 90px; width: 200px; margin-left: 60px; background-color: #077a03; border: 2px solid #dbd9c4; border-radius: 25px; color: white; display: flex; justify-content: center; align-items: center; flex-direction: column;">
+                <p style="margin: 0;">Hora Atual</p>
+                <div
+                    style="margin: 0;width: 90%; height: 70%; border: 1px solid #a69905; background-color: rgb(1, 1, 26); border-radius: 10px; display: flex; justify-content: center; align-items: center;">
+                    <h2 id="currentTime"> </h2>
+                </div>
+            </div>
+        </div>
+
+        <div>
+
+            <div
+                style="height: 90px; width: 200px; margin-left: 60px; background-color: #077a03; border: 2px solid #dbd9c4; border-radius: 25px; color: white; display: flex; justify-content: center; align-items: center; flex-direction: column;">
+                <p style="margin: 0;">N* Sorteio</p>
+                <div
+                    style="margin: 0;width: 90%; height: 70%; border: 1px solid #a69905; background-color: rgb(1, 1, 26); border-radius: 10px; display: flex; justify-content: center; align-items: center;">
+                    <h2 id="numeroBingo"> 000001 </h2>
+                </div>
+            </div>
+        </div>
+
+        <div>
+
+            <div
+                style="height: 90px; width: 200px; margin-left: 60px; background-color: #077a03; border: 2px solid #dbd9c4; border-radius: 25px; color: white; display: flex; justify-content: center; align-items: center; flex-direction: column;">
+                <p style="margin: 0;">CUMPOM</p>
+                <div
+                    style="margin: 0;width: 90%; height: 70%; border: 1px solid #a69905; background-color: rgb(1, 1, 26); border-radius: 10px; display: flex; justify-content: center; align-items: center;">
+                    <h2 id="cumpomvalor"> R$ 1,00 </h2>
+                </div>
+            </div>
+        </div>
+
+        <div>
+
+            <div
+                style="height: 90px; width: 200px; margin-left: 60px; background-color: #077a03; border: 2px solid #dbd9c4; border-radius: 25px; color: white; display: flex; justify-content: center; align-items: center; flex-direction: column;">
+                <p style="margin: 0;">Local</p>
+                <div
+                    style="margin: 0;width: 90%; height: 70%; border: 1px solid #a69905; background-color: rgb(1, 1, 26); border-radius: 10px; display: flex; justify-content: center; align-items: center;">
+                    <h2 id=""> Online </h2>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="content">
+        <div>
+            <div
+                style="height: 90px; width: 250px; background-color: #077a03; border: 2px solid #EDE04E; border-radius: 25px; color: white; display: flex; justify-content: center; align-items: center; flex-direction: column; margin-top: 25px;">
+                <p style="margin: 0;">Premio 1</p>
+                <div
+                    style="margin: 0;width: 90%; height: 70%; background-color: black; border-radius: 10px; display: flex; justify-content: center; align-items: center;">
+                    <h2> R$ <span id="quadra"> 2.500.00 </span></h2>
+                </div>
+            </div>
+
+            <div
+                style="height: 90px; width: 250px; background-color: #077a03; border: 2px solid #EDE04E; border-radius: 25px; color: white; display: flex; justify-content: center; align-items: center; flex-direction: column; margin-top: 25px;">
+                <p style="margin: 0;">Premio 2</p>
+                <div
+                    style="margin: 0;width: 90%; height: 70%; background-color: black; border-radius: 10px; display: flex; justify-content: center; align-items: center;">
+                    <h2> R$<span id="linha"> 2.500.00 </span> </h2>
+                </div>
+            </div>
+        </div>
+        <div style="width: 40%; display: flex; margin-top: 50px; align-items: center; flex-direction: column;">
+            <div id="numbersAntigos" style="display:flex;">
+                <div class="bola-sinucaAntiga" id="numberantigoone">-</div>
+                <div class="bola-sinucaAntiga" id="numberantigotwo">-</div>
+                <div class="bola-sinucaAntiga" id="numberantigothree">-</div>
+                <div class="bola-sinucaAntiga" id="numberantigofour">-</div>
+            </div>
+            <div class="big-number bola-sinuca" id="bigNumber"></div>
+        </div>
+        <div style="width: 60%; display: flex; justify-content: flex-end;">
+            <div class="all-numbers" id="allNumbers"></div>
+        </div>
+    </div>
+    <div style="display: flex; justify-content: flex-end;">
+        <div
+            style="width: 50%; border-radius: 10px; border: 1px solid #EDE04E; background-color: #007637; height: 100%;color: white; text-align: center; ">
+            <h1>Vencedores:</h1>
+            <div>PREMIO 1: <br>
+                <div id="vencedor1"></div> ...
+            </div>
+            <div>PREMIO 2: <br>
+                <div id="vencedor2"></div> ...
+            </div>
+            <div>PREMIO 3: <br>
+                <div id="vencedor3"></div> ...
+            </div>
+        </div>
+        <div class="cards-container" id="bingoCards"></div>
+
+
+        <audio id="audioParabens" src="effect.mp3" type="audio/mpeg"></audio>
+
+
+        <div class="last-numbers" style="display: none;">
+            <h3>Últimos números sorteados</h3>
+            <ol id="lastNumbers"></ol>
+        </div>
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        const bingoCards = document.getElementById("bingoCards");
+        const lastNumbers = document.getElementById("lastNumbers");
+        const allNumbers = document.getElementById("allNumbers");
+        const bigNumber = document.getElementById("bigNumber");
+        var vencedor1 = false;
+        var vencedor2 = false;
+        var vencedor3 = false;
+        let interval;
+        var ids = [];
+        var url = 'http://localhost/apibingo/'
+        function createBingoCard(numbers) {
+            const card = document.createElement("div");
+            card.className = "bingo-card";
+            numbers.forEach((number) => {
+                const cell = document.createElement("div");
+                cell.className = "bingo-cell";
+                cell.textContent = number;
+                card.appendChild(cell);
+            });
+            return card;
+        }
+
+        function generateBingoNumbers() {
+            const numbers = [...Array(90).keys()].map((n) => n + 1);
+            return numbers.sort(() => Math.random() - 0.5).slice(0, 15);
+        }
+
+        function createBingoCards(n) {
+            for (let i = 0; i < n; i++) {
+                const cardNumbers = generateBingoNumbers();
+                const card = createBingoCard(cardNumbers);
+                bingoCards.appendChild(card);
+            }
+        }
+
+        function createAllNumbers() {
+            for (let i = 1; i <= 90; i++) {
+                const number = document.createElement("div");
+                number.className = "number";
+                number.textContent = i;
+                allNumbers.appendChild(number);
+            }
+        }
+
+        async function saveBingoCard(idUsuario, nomeUsuario, numerosCartela) {
+            const data = {
+                id_usuario: idUsuario,
+                nome_usuario: nomeUsuario,
+                cartela: numerosCartela,
+                data_compra: new Date().toISOString().slice(0, 10),
+            };
+
+            try {
+                // Substitua a URL pelo endereço da sua API.
+                const response = await fetch(url + "https://sua-api.com/salvar_cartela", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(data),
+                });
+
+                if (response.ok) {
+                    const responseData = await response.json();
+                } else {
+                    console.error("Erro ao salvar cartela:", response.statusText);
+                }
+            } catch (error) {
+                console.error("Erro ao salvar cartela:", error);
+            }
+        }
+
+        function updateLastDrawnNumbers() {
+            const numberantigoone = document.getElementById("numberantigoone");
+            const numberantigotwo = document.getElementById("numberantigotwo");
+            const numberantigothree = document.getElementById("numberantigothree");
+            const numberantigofour = document.getElementById("numberantigofour");
+
+            const lastIndex = drawnNumbers.length - 1;
+
+            if (drawnNumbers.length >= 4) {
+                numberantigoone.textContent = drawnNumbers[lastIndex - 3];
+                numberantigotwo.textContent = drawnNumbers[lastIndex - 2];
+                numberantigothree.textContent = drawnNumbers[lastIndex - 1];
+                numberantigofour.textContent = drawnNumbers[lastIndex];
+            } else if (drawnNumbers.length === 3) {
+                numberantigoone.textContent = drawnNumbers[lastIndex - 2];
+                numberantigotwo.textContent = drawnNumbers[lastIndex - 1];
+                numberantigothree.textContent = drawnNumbers[lastIndex];
+            } else if (drawnNumbers.length === 2) {
+                numberantigotwo.textContent = drawnNumbers[lastIndex - 1];
+                numberantigothree.textContent = drawnNumbers[lastIndex];
+            } else if (drawnNumbers.length === 1) {
+                numberantigothree.textContent = drawnNumbers[lastIndex];
+            }
+        }
+        var randomNumber;
+        var draws_with = []
+        function drawNumber() {
+            if (vencedor3) {
+                document.getElementById("modalawaitencerrado").style.display = "flex";
+                return;
+            }
+
+            if (randomNumber) {
+                drawnNumbers.push(randomNumber);
+                lastNumbers.innerHTML =
+                    `<li>${randomNumber}</li>` +
+                    lastNumbers.innerHTML.slice(0, 2 * 2 * 3 - 1);
+
+                const cells = document.querySelectorAll(".bingo-cell");
+                cells.forEach(async (cell) => {
+                    var result = await draws_with.find(element => element === parseInt(cell.textContent))
+                    console.log('numero sorteado: ', result)
+                    if (parseInt(cell.textContent) === result) {
+                        cell.classList.add("selected");
+                    }
+                });
+                const numberDivs = document.querySelectorAll(".number");
+                numberDivs.forEach(async (div) => {
+                    var result = await draws_with.find(element => element === parseInt(div.textContent))
+                    console.log('numero sorteado: ', result)
+                    if (parseInt(div.textContent) === result) {
+                        div.classList.add("drawn");
+                    }
+                });
+
+                // Falar o número sorteado
+                const speech = new SpeechSynthesisUtterance(`${randomNumber}`);
+                speech.lang = "pt-BR";
+                window.speechSynthesis.speak(speech);
+                // Mostrar o número grande
+                bigNumber.textContent = randomNumber;
+                bigNumber.style.display = "block";
+                setTimeout(() => {
+                    bigNumber.style.display = "none";
+                }, 1000);
+                updateLastDrawnNumbers();
+            }
+            //else {
+            //   clearInterval(interval);
+            // alert("Todos os números já foram sorteados!");
+            //}
+            verificarVencedor();
+        }
+
+        async function startBingo() {
+            sendMsg()
+            if (interval) clearInterval(interval);
+            interval = setInterval(async () => {
+                drawNumber();
+            }, 5000);
+        }
+
+        function exibirCartelasNaTela(cartelas) {
+            bingoCards.innerHTML = ""; // Limpar as cartelas existentes
+            cartelas.forEach((cartela) => {
+                const numeros = cartela.cartela.split(",").map(Number);
+                const card = createBingoCard(numeros);
+                card.dataset.id = cartela.id;
+                card.dataset.nome = cartela.nome_usuario;
+                bingoCards.appendChild(card);
+                ids.push(cartela.id);
+            });
+        }
+
+        async function buscarCartelas() {
+            try {
+                const response = await fetch(
+                    url + "getallcartelas.php?action=buscarCartelas"
+                );
+
+                if (response.ok) {
+                    const cartelas = await response.json();
+
+                    exibirCartelasNaTela(cartelas);
+                } else {
+                    console.error("Erro ao buscar cartelas:", response.statusText);
+                }
+            } catch (error) {
+                console.error("Erro ao buscar cartelas:", error);
+            }
+        }
+        function verificarVencedor() {
+            const cartelas = document.querySelectorAll(".bingo-card");
+
+            cartelas.forEach((cartela) => {
+                const numeros = cartela.querySelectorAll(".bingo-cell");
+                const numerosSelecionados = cartela.querySelectorAll(
+                    ".bingo-cell.selected"
+                );
+                if (vencedor1 == false) {
+                    if (numerosSelecionados.length >= 4) {
+                        anunciarVencedor(cartela.dataset.nome, "Quem acertou 4 números");
+                        document.getElementById("vencedor1").innerText = cartela.dataset.nome;
+                        vencedor1 = true;
+                    }
+                }
+                if (vencedor2 == false) {
+                    // Verificar se alguma linha foi completada
+                    for (let i = 0; i < 3; i++) {
+                        const linha = Array.from(numeros).slice(i * 5, i * 5 + 5);
+                        if (linha.every((numero) => numero.classList.contains("selected"))) {
+                            anunciarVencedor(cartela.dataset.nome, "Linha completa");
+                            document.getElementById("vencedor2").innerText = cartela.dataset.nome;
+                            vencedor2 = true;
+                            break;
+                        }
+                    }
+                }
+
+                if (vencedor3 == false) {
+                    // Verificar se a cartela inteira foi completada
+                    if (numerosSelecionados.length === 15) {
+                        vencedor3 = true;
+                        deleteCartelas();
+                        anunciarVencedor(cartela.dataset.nome, "Bingo");
+                        document.getElementById("vencedor3").innerText = cartela.dataset.nome;
+                    }
+                }
+            });
+        }
+
+        buscarCartelas();
+        const drawnNumbers = [];
+        createAllNumbers(); // Crie a lista de números de 1 a 90
+
+        function showCurrentTime() {
+            const currentTimeElement = document.getElementById("currentTime");
+            const now = new Date();
+            const hours = String(now.getHours()).padStart(2, "0");
+            const minutes = String(now.getMinutes()).padStart(2, "0");
+            const seconds = String(now.getSeconds()).padStart(2, "0");
+
+            currentTimeElement.textContent = `${hours}:${minutes}:${seconds}`;
+        }
+
+        setInterval(showCurrentTime, 1000);
+        function anunciarVencedor(nome, premio) {
+            const modal = document.createElement("div");
+            modal.innerHTML = `
+        <div style="background-color: white; padding: 20px; text-align: center;">
+            <h2>Parabéns, ${nome}!</h2>
+            <p>Você ganhou o prêmio: ${premio}!</p>
+        </div>
+    `;
+            modal.style.position = "fixed";
+            modal.style.top = "0";
+            modal.style.left = "0";
+            modal.style.width = "100vw";
+            modal.style.height = "100vh";
+            modal.style.backgroundColor = "rgba(0, 0, 0, 0.7)";
+            modal.style.display = "flex";
+            modal.style.justifyContent = "center";
+            modal.style.alignItems = "center";
+            modal.style.zIndex = "1000";
+
+            setTimeout(() => {
+                modal.remove();
+            }, 5000);
+            // Fechar o modal ao clicar fora
+            modal.addEventListener("click", () => {
+                modal.remove();
+            });
+            document.body.appendChild(modal);
+        }
+
+        function startMysql() {
+            $.get(url + "startsql.php", function (data) { });
+        }
+
+        function getNumeroBingo() {
+            $.get(url + "getNumeroBingo.php", function (data) {
+                value = JSON.parse(data);
+                document.getElementById("numeroBingo").innerText = value.count;
+            });
+        }
+
+        function deleteCartelas() {
+            ids.forEach((doc) => {
+                $.get(url + "deleteCartelas.php?id=" + doc, function (data) {
+
+                });
+            }).then(() => {
+                setTimeout(() => {
+                    window.location.reload()
+                }, 5000)
+            });
+        }
+    </script>
+    <script>
+        var quanty_start = "";
+        var started = false;
+        var url = "http://localhost/apibingo/";
+
+        function fetchDataQuanties() {
+            $.get(url + "verifyQuantitysstart.php", function (data) {
+                let value = JSON.parse(data);
+                quanty_start = value.quantidade_inicio;
+                document.getElementById("cumpomvalor").innerText =
+                    "R$ " + parseFloat(value.valor_cartela);
+            });
+        }
+        fetchDataQuanties();
+        var valor1 = 0
+        var valor2 = 0
+        var valor3 = 0
+        function getPremios(quantiesPrimios) {
+            $.get(url + "getpremios.php", function (data) {
+                let value = JSON.parse(data);
+                document.getElementById("bingo").innerText = value.bingo * Number(quantiesPrimios);
+                document.getElementById("quadra").innerText = parseFloat(value.quadra * Number(quantiesPrimios)).toFixed(2);
+                document.getElementById("linha").innerText = parseFloat(value.linha * Number(quantiesPrimios)).toFixed(2);
+
+                valor1 = value.bingo * Number(quantiesPrimios)
+                valor2 = value.quadra * Number(quantiesPrimios)
+                valor3 = value.linha * Number(quantiesPrimios)
+            });
+        }
+        getPremios();
+        async function fetchData() {
+            if (started) return;
+            await $.get(url + "verifyQuantities.php", async function (data) {
+                let value = JSON.parse(data);
+                await fetchDataQuanties();
+                await getPremios(Number(value.count));
+                await getNumeroBingo();
+                await buscarCartelas();
+                if (Number(value.count) >= Number(quanty_start)) {
+                    startMysql();
+                    document.getElementById("modalawait").style.display = "none";
+
+                    document.getElementById("modalawaitCount").style.display = "flex";
+                    started = true;
+                    setTimeout((doc) => {
+                        document.getElementById("modalawaitCount").style.display =
+                            "none";
+                        startBingo();
+                    }, 5000);
+                }
+            });
+        }
+        $(document).ready(function () {
+            fetchData();
+            setInterval(fetchData, 5000); // Atualiza a cada 5 segundos
+        });
+
+    </script>
+
+    <script>
+        var ws = new WebSocket('ws://localhost:8080');
+
+        ws.onmessage = function (event) {
+            const data = JSON.parse(event.data);
+            const randomNumber1 = data.randomNumber;
+            console.log(data)
+            draws_with = data.numbers
+            // Agora você pode usar `randomNumber1` para atualizar o DOM conforme necessário
+            console.log('Número sorteado:', randomNumber1);
+            randomNumber = randomNumber1;
+            // ... coloque aqui o código para atualizar o DOM ...
+        };
+
+        function sendMsg() {
+            ws.send('Olá, servidor!');
+        }
+    </script>
+</body>
+
+</html>
