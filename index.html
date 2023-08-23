@@ -510,7 +510,9 @@
                 return;
             }
 
-            if (randomNumber) {
+            let verifyded = draws_with.find((element) => element == randomNumber);
+   
+            if (randomNumber == verifyded) {
                 drawnNumbers.push(randomNumber);
                 lastNumbers.innerHTML =
                     `<li>${randomNumber}</li>` +
@@ -545,10 +547,7 @@
                 }, 1000);
                 updateLastDrawnNumbers();
             }
-            //else {
-            //   clearInterval(interval);
-            // alert("Todos os números já foram sorteados!");
-            //}
+
             verificarVencedor();
         }
 
@@ -757,7 +756,7 @@
     </script>
 
     <script>
-        var ws = new WebSocket('ws://bingoinvictdasorte-966a4c10b438.herokuapp.com');
+        var ws = new WebSocket('ws://localhost:3000');
 
         ws.onmessage = function (event) {
             const data = JSON.parse(event.data);
