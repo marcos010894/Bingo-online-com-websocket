@@ -24,7 +24,6 @@
             flex-grow: inherit;
             flex: 2;
             height: 100vh;
-            overflow: hidden;
         }
 
         h3 {
@@ -412,7 +411,11 @@
         var vencedor3 = false;
         let interval;
         var ids = [];
-        var url = 'http://localhost/apibingo/'
+        var started = false;
+        var url = 'https://eaglesoftware.com.br/apibingo/'
+        var valor1 = 0
+        var valor2 = 0
+        var valor3 = 0
         function createBingoCard(numbers) {
             const card = document.createElement("div");
             card.className = "bingo-card";
@@ -507,7 +510,9 @@
                 return;
             }
 
-            if (randomNumber) {
+            let verifyded = draws_with.find((element) => element == randomNumber);
+   
+            if (randomNumber == verifyded) {
                 drawnNumbers.push(randomNumber);
                 lastNumbers.innerHTML =
                     `<li>${randomNumber}</li>` +
@@ -542,10 +547,7 @@
                 }, 1000);
                 updateLastDrawnNumbers();
             }
-            //else {
-            //   clearInterval(interval);
-            // alert("Todos os números já foram sorteados!");
-            //}
+
             verificarVencedor();
         }
 
@@ -564,6 +566,7 @@
                 const card = createBingoCard(numeros);
                 card.dataset.id = cartela.id;
                 card.dataset.nome = cartela.nome_usuario;
+                card.dataset.id_usuario = cartela.id_usuario;
                 bingoCards.appendChild(card);
                 ids.push(cartela.id);
             });
@@ -599,6 +602,7 @@
                         anunciarVencedor(cartela.dataset.nome, "Quem acertou 4 números");
                         document.getElementById("vencedor1").innerText = cartela.dataset.nome;
                         vencedor1 = true;
+                        distribuir_pontos(valor2, cartela.dataset.id_usuario)
                     }
                 }
                 if (vencedor2 == false) {
@@ -609,6 +613,7 @@
                             anunciarVencedor(cartela.dataset.nome, "Linha completa");
                             document.getElementById("vencedor2").innerText = cartela.dataset.nome;
                             vencedor2 = true;
+                            distribuir_pontos(valor3, cartela.dataset.id_usuario)
                             break;
                         }
                     }
@@ -621,6 +626,7 @@
                         deleteCartelas();
                         anunciarVencedor(cartela.dataset.nome, "Bingo");
                         document.getElementById("vencedor3").innerText = cartela.dataset.nome;
+                        distribuir_pontos(valor1, cartela.dataset.id_usuario)
                     }
                 }
             });
@@ -687,16 +693,15 @@
 
                 });
             }).then(() => {
-                setTimeout(() => {
-                    window.location.reload()
-                }, 5000)
+                console.log('bingo deletado')
+                started = true
             });
         }
     </script>
     <script>
         var quanty_start = "";
-        var started = false;
-        var url = "http://localhost/apibingo/";
+
+        var url = "https://eaglesoftware.com.br/apibingo/";
 
         function fetchDataQuanties() {
             $.get(url + "verifyQuantitysstart.php", function (data) {
@@ -707,13 +712,11 @@
             });
         }
         fetchDataQuanties();
-        var valor1 = 0
-        var valor2 = 0
-        var valor3 = 0
+
         function getPremios(quantiesPrimios) {
             $.get(url + "getpremios.php", function (data) {
                 let value = JSON.parse(data);
-                document.getElementById("bingo").innerText = value.bingo * Number(quantiesPrimios);
+                document.getElementById("bingo").innerText = parseFloat(value.bingo * Number(quantiesPrimios)).toFixed(2);
                 document.getElementById("quadra").innerText = parseFloat(value.quadra * Number(quantiesPrimios)).toFixed(2);
                 document.getElementById("linha").innerText = parseFloat(value.linha * Number(quantiesPrimios)).toFixed(2);
 
@@ -768,6 +771,24 @@
 
         function sendMsg() {
             ws.send('Olá, servidor!');
+        }
+    </script>
+    <script>
+        const distribuir_pontos = (valor, usuarioLogado) => {
+            $.ajax({
+                url: 'https://escritorio.invictplanet.com/painel/servicosbd/adicionarpontosbingo.php',
+                type: 'POST',
+                data: {
+                    valor: valor,
+                    id_user: usuarioLogado
+                },
+                success: function (response) {
+                    alert(response);
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    alert("Ocorreu um erro: " + errorThrown);
+                }
+            });
         }
     </script>
 </body>
