@@ -753,7 +753,7 @@
     </script>
 
     <script>
-        var ws = new WebSocket('ws://localhost:8080');
+        var ws = new WebSocket('ws://bingo-da-sorte.vercel.app/');
 
         ws.onmessage = function (event) {
             const data = JSON.parse(event.data);
