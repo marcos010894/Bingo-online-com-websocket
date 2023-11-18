@@ -271,6 +271,11 @@
             justify-content: center;
             align-items: center;
         }
+
+        .bingo-card-header {
+            color: white;
+            text-align: center;
+        }
     </style>
 </head>
 
@@ -416,7 +421,15 @@
         var valor1 = 0
         var valor2 = 0
         var valor3 = 0
-        function createBingoCard(numbers) {
+        function createBingoCard(numbers, nameUser, cartela) {
+            const cardContainer = document.createElement("div");
+            cardContainer.className = "bingo-card-container";
+
+            const header = document.createElement("div");
+            header.className = "bingo-card-header";
+            header.textContent = nameUser;
+            cardContainer.appendChild(header);
+
             const card = document.createElement("div");
             card.className = "bingo-card";
             numbers.forEach((number) => {
@@ -425,7 +438,13 @@
                 cell.textContent = number;
                 card.appendChild(cell);
             });
-            return card;
+            card.dataset.id = cartela.id;
+            card.dataset.nome = cartela.nome_usuario;
+            card.dataset.id_usuario = cartela.id_usuario;
+            cardContainer.appendChild(card);
+
+            console.log(numbers);
+            return cardContainer;
         }
 
         function generateBingoNumbers() {
@@ -433,13 +452,13 @@
             return numbers.sort(() => Math.random() - 0.5).slice(0, 15);
         }
 
-        function createBingoCards(n) {
-            for (let i = 0; i < n; i++) {
-                const cardNumbers = generateBingoNumbers();
-                const card = createBingoCard(cardNumbers);
-                bingoCards.appendChild(card);
-            }
-        }
+        /* function createBingoCards(n) {
+             for (let i = 0; i < n; i++) {
+                 const cardNumbers = generateBingoNumbers();
+                 const card = createBingoCard(cardNumbers);
+                 bingoCards.appendChild(card);
+             }
+         } */
 
         function createAllNumbers() {
             for (let i = 1; i <= 90; i++) {
@@ -507,12 +526,8 @@
         function drawNumber() {
             if (vencedor3) {
                 document.getElementById("modalawaitencerrado").style.display = "flex";
-                return;
             }
-
-            let verifyded = draws_with.find((element) => element == randomNumber);
-   
-            if (randomNumber == verifyded) {
+            if (randomNumber) {
                 drawnNumbers.push(randomNumber);
                 lastNumbers.innerHTML =
                     `<li>${randomNumber}</li>` +
@@ -563,10 +578,8 @@
             bingoCards.innerHTML = ""; // Limpar as cartelas existentes
             cartelas.forEach((cartela) => {
                 const numeros = cartela.cartela.split(",").map(Number);
-                const card = createBingoCard(numeros);
-                card.dataset.id = cartela.id;
-                card.dataset.nome = cartela.nome_usuario;
-                card.dataset.id_usuario = cartela.id_usuario;
+                const card = createBingoCard(numeros, cartela.nome_usuario, cartela);
+
                 bingoCards.appendChild(card);
                 ids.push(cartela.id);
             });

@@ -21,18 +21,18 @@ let started = false;
 let drawnNumbers = [];
 
 wss.on("connection", (ws) => {
-  console.log("Cliente conectado");
-
   ws.on("message", (message) => {
     if (!started) {
       started = true;
       setInterval(() => {
         if (drawnNumbers.length >= 90) {
           drawnNumbers = [];
-          started = false;
+          res.end();
         }
         drawNumber(wss, drawnNumbers);
       }, 5000); // Sorteia um número a cada 5 segundos
+    }else{
+      restartServer()
     }
   });
 
@@ -44,9 +44,8 @@ async function drawNumber(wss, drawnNumbers) {
     .map((n) => n + 1)
     .filter((n) => !drawnNumbers.includes(n));
 
-  const randomNumber = await availableNumbers[
-    Math.floor(Math.random() * availableNumbers.length)
-  ];
+  const randomNumber =
+    availableNumbers[Math.floor(Math.random() * availableNumbers.length)];
 
   await drawnNumbers.push(randomNumber);
   wss.clients.forEach((client) => {
@@ -61,3 +60,25 @@ async function drawNumber(wss, drawnNumbers) {
 }
 
 server.listen(port);
+
+
+
+
+
+function restartServer() {
+  clearInterval(intervalId); // Limpa o intervalo existente
+
+  // Reinicializa as variáveis e lógica necessárias
+  started = false;
+  drawnNumbers = [];
+
+
+  // Inicia novamente o intervalo, se a lógica original exigir
+  intervalId = setInterval(() => {
+    if (drawnNumbers.length >= 90) {
+      drawnNumbers = [];
+      res.end();
+    }
+    drawNumber(wss, drawnNumbers);
+  }, 5000);
+}
