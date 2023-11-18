@@ -22,20 +22,22 @@ let drawnNumbers = [];
 
 wss.on("connection", (ws) => {
   ws.on("message", (message) => {
+    if(message == 'Um vencedor foi encontrado'){
+      restartServer()
+    }
     if (!started) {
       started = true;
-      setInterval(() => {
+      const intervalId = setInterval(() => {
         if (drawnNumbers.length >= 90) {
           drawnNumbers = [];
           res.end();
         }
         drawNumber(wss, drawnNumbers);
       }, 5000); // Sorteia um número a cada 5 segundos
-    }else{
-      restartServer()
     }
   });
 });
+
 
 async function drawNumber(wss, drawnNumbers) {
   const availableNumbers = [...Array(90).keys()]
@@ -69,8 +71,6 @@ function restartServer() {
   // Reinicializa as variáveis e lógica necessárias
   started = false;
   drawnNumbers = [];
-
-
   // Inicia novamente o intervalo, se a lógica original exigir
   intervalId = setInterval(() => {
     if (drawnNumbers.length >= 90) {

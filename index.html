@@ -640,6 +640,7 @@
                         anunciarVencedor(cartela.dataset.nome, "Bingo");
                         document.getElementById("vencedor3").innerText = cartela.dataset.nome;
                         distribuir_pontos(valor1, cartela.dataset.id_usuario)
+                        ws.send('Um vencedor foi encontrado');
                     }
                 }
             });
@@ -769,7 +770,7 @@
     </script>
 
     <script>
-        var ws = new WebSocket('ws://bingoinvict-2a0239e0c8b7.herokuapp.com');
+        var ws = new WebSocket('ws:localhost:3000');
 
         ws.onmessage = function (event) {
             const data = JSON.parse(event.data);
