@@ -770,7 +770,7 @@
     </script>
 
     <script>
-        var ws = new WebSocket('ws:localhost:3000');
+        var ws = new WebSocket('ws://bingoinvict-2a0239e0c8b7.herokuapp.com');
 
         ws.onmessage = function (event) {
             const data = JSON.parse(event.data);
