@@ -35,8 +35,6 @@ wss.on("connection", (ws) => {
       restartServer()
     }
   });
-
-  ws.send("Bem-vindo ao Bingo online!");
 });
 
 async function drawNumber(wss, drawnNumbers) {
