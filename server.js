@@ -1,30 +1,22 @@
 const WebSocket = require("ws");
-const https = require("https");
+const http = require("http");
 const fs = require("fs");
+const port = process.env.PORT || 3000;
 const express = require("express");
 const app = express();
-
-const port = process.env.PORT || 3000;
-
-// Carregue o conteúdo estático
-app.use(express.static("public"));
-
-// Rota padrão para carregar o HTML
-app.get("/", (req, res) => {
-  res.sendFile(__dirname + "/index.html");
+const server = http.createServer((req, res) => {
+  res.writeHead(200, { "Content-Type": "text/html" });
+  fs.readFile("index.html", (err, data) => {
+    if (err) {
+      console.log(err);
+      res.end();
+    } else {
+      res.end(data);
+    }
+  });
 });
 
-// Configuração do servidor HTTPS
-const server = https.createServer(
-  {
-    cert: fs.readFileSync("caminho-para-seu-certificado.pem"),
-    key: fs.readFileSync("caminho-para-sua-chave-privada.pem"),
-  },
-  app
-);
-
 const wss = new WebSocket.Server({ server });
-
 let started = false;
 let drawnNumbers = [];
 
@@ -35,19 +27,19 @@ wss.on("connection", (ws) => {
       setInterval(() => {
         if (drawnNumbers.length >= 90) {
           drawnNumbers = [];
-          // res.end(); // Remova esta linha, pois res não está definido aqui
+          res.end();
         }
         drawNumber(wss, drawnNumbers);
       }, 5000); // Sorteia um número a cada 5 segundos
-    } else {
-      restartServer();
+    }else{
+      restartServer()
     }
   });
 
   ws.send("Bem-vindo ao Bingo online!");
 });
 
-function drawNumber(wss, drawnNumbers) {
+async function drawNumber(wss, drawnNumbers) {
   const availableNumbers = [...Array(90).keys()]
     .map((n) => n + 1)
     .filter((n) => !drawnNumbers.includes(n));
@@ -55,7 +47,7 @@ function drawNumber(wss, drawnNumbers) {
   const randomNumber =
     availableNumbers[Math.floor(Math.random() * availableNumbers.length)];
 
-  drawnNumbers.push(randomNumber);
+  await drawnNumbers.push(randomNumber);
   wss.clients.forEach((client) => {
     if (client.readyState === WebSocket.OPEN) {
       client.send(
@@ -67,6 +59,12 @@ function drawNumber(wss, drawnNumbers) {
   return randomNumber;
 }
 
+server.listen(port);
+
+
+
+
+
 function restartServer() {
   clearInterval(intervalId); // Limpa o intervalo existente
 
@@ -74,16 +72,13 @@ function restartServer() {
   started = false;
   drawnNumbers = [];
 
+
   // Inicia novamente o intervalo, se a lógica original exigir
   intervalId = setInterval(() => {
     if (drawnNumbers.length >= 90) {
       drawnNumbers = [];
-      // res.end(); // Remova esta linha, pois res não está definido aqui
+      res.end();
     }
     drawNumber(wss, drawnNumbers);
   }, 5000);
 }
-
-server.listen(port, () => {
-  console.log(`Servidor HTTPS/WSS iniciado na porta ${port}`);
-});
