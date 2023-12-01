@@ -124,7 +124,7 @@
             line-height: 100px;
             text-align: center;
             border-radius: 50%;
-            font-size: 2em;
+            font-size: 4em;
             display: none;
         }
 
@@ -154,15 +154,15 @@
         }
 
         .bola-sinuca {
-            width: 100px;
-            height: 100px;
+            width: 200px;
+            height: 200px;
             border-radius: 50%;
             display: flex;
             justify-content: center;
             align-items: center;
             font-family: Arial, sans-serif;
             font-weight: bold;
-            font-size: 32px;
+            font-size: 72px;
             color: #FFF;
             background: radial-gradient(circle at 50%, #070, #000);
             box-shadow: inset 0 0 5px #000, 0 0 5px #000;
@@ -171,8 +171,8 @@
 
         .bola-sinuca:after {
             content: '';
-            width: 30%;
-            height: 30%;
+            width: 60%;
+            height: 60%;
             border-radius: 50%;
             background: radial-gradient(circle at 50%, #FFF, transparent);
             position: absolute;
@@ -256,11 +256,10 @@
             font-size: 28px;
             font-weight: bold;
             margin: 0;
-            color: #f1c40f;
+            color: #007637;
         }
 
         #modalawait,
-        #modalawaitCount,
         #modalawaitencerrado {
             width: 100vw;
             height: 100vh;
@@ -270,23 +269,102 @@
             display: flex;
             justify-content: center;
             align-items: center;
+
         }
+
+
+        #modalawaitCount {
+            width: 100vw;
+            height: 100vh;
+            position: absolute;
+            z-index: 2000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #282c34;
+            color: #61dafb;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+
+
+        #contador {
+            font-size: 10em;
+            margin-bottom: 20px;
+            color: #007637;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        #contador::before {
+            content: '';
+            display: block;
+            width: 100%;
+            height: 2px;
+            background-color: #61dafb;
+            margin-bottom: 10px;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(3.2);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        #contador,
+        #mensagem {
+            animation: pulse 1s infinite;
+        }
+
+        #mensagem {
+            font-size: 4.5em;
+            color: #61fb78;
+            font-weight: bold;
+        }
+
 
         .bingo-card-header {
             color: white;
             text-align: center;
+        }
+
+        .bkg_image {
+            width: 100%;
+            height: 100vh;
+            background-color: black;
         }
     </style>
 </head>
 
 <body
     style=" background-image: url('https://img.freepik.com/fotos-premium/fundo-verde-escuro-grunge-textura-de-papel-de-design-antigo-com-espaco-de-copia-e-espaco-para-texto_213524-614.jpg');background-size: cover;">
+    <audio id="bip" src="https://eaglesoftware.com.br/bip.mp3"></audio>
+    <audio id="aplausos" src="//linkparadownload.com/wp-content/baixar/plateia_aplaudindo_efeito_sonoro_toquesengracadosmp3.com.mp3"></audio>
+
     <div id="modalawait">
-        <h1> Iniciaremos em instantes... </h1>
+        <div
+            style="color: white; background-color: #5ba45b; border-radius: 20px; border: 4px solid #f6f0a7; width: 70vh; height: 300px; display: flex; justify-content: center; align-items: center; ">
+            <h1> Aguardando o proximo jogo </h1>
+
+        </div>
     </div>
 
     <div style="display: none;" id="modalawaitCount">
-        <img src="load.gif" alt="">
+        <div id="contador">10</div>
     </div>
 
     <div style="display: none;" id="modalawaitencerrado">
@@ -421,6 +499,23 @@
         var valor1 = 0
         var valor2 = 0
         var valor3 = 0
+        pause_moments = false
+
+        function stop() {
+            if (pause_moments) {
+                return new Promise((resolve) => {
+                    setTimeout(() => {
+                        // Your asynchronous operation here
+                        console.log("Operation completed after 2000 milliseconds");
+
+                        // Resolve the Promise to signal completion
+                        resolve();
+                    }, 2000);
+                });
+            }
+            return false
+
+        }
         function createBingoCard(numbers, nameUser, cartela) {
             const cardContainer = document.createElement("div");
             cardContainer.className = "bingo-card-container";
@@ -523,7 +618,8 @@
         }
         var randomNumber;
         var draws_with = []
-        function drawNumber() {
+        async function drawNumber() {
+            
             if (vencedor3) {
                 document.getElementById("modalawaitencerrado").style.display = "flex";
             }
@@ -556,7 +652,7 @@
                 window.speechSynthesis.speak(speech);
                 // Mostrar o número grande
                 bigNumber.textContent = randomNumber;
-                bigNumber.style.display = "block";
+                bigNumber.style.display = "flex";
                 setTimeout(() => {
                     bigNumber.style.display = "none";
                 }, 1000);
@@ -603,6 +699,7 @@
             }
         }
         function verificarVencedor() {
+            
             const cartelas = document.querySelectorAll(".bingo-card");
 
             cartelas.forEach((cartela) => {
@@ -662,13 +759,21 @@
 
         setInterval(showCurrentTime, 1000);
         function anunciarVencedor(nome, premio) {
+            clearInterval(interval)
+            document.getElementById('aplausos').play();
             const modal = document.createElement("div");
             modal.innerHTML = `
-        <div style="background-color: white; padding: 20px; text-align: center;">
-            <h2>Parabéns, ${nome}!</h2>
-            <p>Você ganhou o prêmio: ${premio}!</p>
-        </div>
-    `;
+                <div style="background-color: white; padding: 20px; text-align: center; display: flex; align-items: center;">
+                    <div>
+                        <img src="https://cdn-icons-png.flaticon.com/512/3135/3135768.png" style="width: 70px; heigth: 70px; border-radius: 50%;"
+                    </div>
+
+                    <div>
+                        <h2>Parabéns, ${nome}!</h2>
+                        <p>Você ganhou o prêmio: ${premio}!</p>]
+                    </div>
+                </div>
+            `;
             modal.style.position = "fixed";
             modal.style.top = "0";
             modal.style.left = "0";
@@ -679,15 +784,22 @@
             modal.style.justifyContent = "center";
             modal.style.alignItems = "center";
             modal.style.zIndex = "1000";
-
+            modal.style.background = "url('https://i.pinimg.com/originals/e5/83/3e/e5833e1bea7d379f0f4e4ae250b7cf81.gif') center/cover no-repeat";
+            setTimeout(() => {
+                document.getElementById('aplausos').play();
+            }, 5000)
             setTimeout(() => {
                 modal.remove();
-            }, 5000);
+                startBingo()
+            }, 20000);
             // Fechar o modal ao clicar fora
             modal.addEventListener("click", () => {
                 modal.remove();
             });
+            pause_moments = false
+
             document.body.appendChild(modal);
+            
         }
 
         function startMysql() {
@@ -749,16 +861,21 @@
                 await getNumeroBingo();
                 await buscarCartelas();
                 if (Number(value.count) >= Number(quanty_start)) {
-                    startMysql();
                     document.getElementById("modalawait").style.display = "none";
+                    startMysql();
 
+                    // Falar o número sorteado
+                    const speech = new SpeechSynthesisUtterance(`Iniciando em`);
+                    speech.lang = "pt-BR";
+                    window.speechSynthesis.speak(speech);
                     document.getElementById("modalawaitCount").style.display = "flex";
                     started = true;
+                    iniciarContador()
                     setTimeout((doc) => {
                         document.getElementById("modalawaitCount").style.display =
                             "none";
                         startBingo();
-                    }, 5000);
+                    }, 12000);
                 }
             });
         }
@@ -770,7 +887,12 @@
     </script>
 
     <script>
-        var ws = new WebSocket('wss://bingoinvict-2a0239e0c8b7.herokuapp.com');
+        var security = false
+        if (security == true) {
+            var ws = new WebSocket('wss://bingoinvict-2a0239e0c8b7.herokuapp.com');
+        } else {
+            var ws = new WebSocket('ws://bingoinvict-2a0239e0c8b7.herokuapp.com');
+        }
 
         ws.onmessage = function (event) {
             const data = JSON.parse(event.data);
@@ -796,12 +918,37 @@
                     valor: valor,
                     id_user: usuarioLogado
                 },
-                success: function (response) {},
+                success: function (response) { },
                 error: function (jqXHR, textStatus, errorThrown) {
                     alert("Ocorreu um erro: " + errorThrown);
                 }
             });
         }
+
+
+        function iniciarContador() {
+
+
+            var contador = 10;
+
+            // Atualiza o valor exibido a cada segundo
+            var intervalo = setInterval(function () {
+
+                document.getElementById('contador').textContent = contador;
+                contador--;
+
+                document.getElementById('bip').play();
+                
+
+
+                // Verifica se o contador chegou a 0 e limpa o intervalo
+                if (contador < 0) {
+                    clearInterval(intervalo);
+                }
+            }, 1000); // 1000 milissegundos = 1 segundo
+        }
+
+
     </script>
 </body>
 
