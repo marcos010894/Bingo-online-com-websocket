@@ -982,10 +982,10 @@
 
     <script>
         var security = true
-        if (security == false) {
+        if (security == true) {
             var ws = new WebSocket('wss://bingoinvict-2a0239e0c8b7.herokuapp.com');
         } else {
-            var ws = new WebSocket('ws:localhost:3000');
+            var ws = new WebSocket('ws://bingoinvict-2a0239e0c8b7.herokuapp.com');
         }
 
         ws.onmessage = function (event) {
