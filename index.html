@@ -375,7 +375,11 @@
 <body
     style=" background-image: url('https://img.freepik.com/fotos-premium/fundo-verde-escuro-grunge-textura-de-papel-de-design-antigo-com-espaco-de-copia-e-espaco-para-texto_213524-614.jpg');background-size: cover;">
     <audio id="bip" src="https://eaglesoftware.com.br/bip.mp3"></audio>
-    <audio id="aplausos" src="https://eaglesoftware.com.br/bingo/alegria.mp3"></audio>
+
+    <audio id="aplausos" loop>
+        <source src="https://eaglesoftware.com.br/bingo/alegria.mp3" type="audio/mp3">
+        Seu navegador não suporta a tag de áudio.
+    </audio>
 
     <div id="modalawait">
         <div
@@ -845,6 +849,7 @@
 
             setTimeout(() => {
                 document.getElementById(`modalawaitVencedores${vencedor}`).style.display = 'none'
+                document.getElementById('aplausos').play();
 
                 const modal = document.createElement("div");
                 modal.innerHTML = `
@@ -873,14 +878,16 @@
 
                 setTimeout(() => {
                     modal.remove();
+                    document.getElementById('aplausos').pause();
+
                     startBingo()
-                }, 20000);
+                }, 10000);
                 // Fechar o modal ao clicar fora
 
                 pause_moments = false
 
                 document.body.appendChild(modal);
-            }, 5000)
+            }, 10000)
 
 
         }
@@ -897,6 +904,7 @@
         }
 
         function deleteCartelas() {
+
             ids.forEach((doc) => {
                 $.get(url + "deleteCartelas.php?id=" + doc, function (data) {
 
@@ -974,7 +982,7 @@
 
     <script>
         var security = true
-        if (security == true) {
+        if (security == false) {
             var ws = new WebSocket('wss://bingoinvict-2a0239e0c8b7.herokuapp.com');
         } else {
             var ws = new WebSocket('ws:localhost:3000');
