@@ -222,7 +222,6 @@
             height: 90px;
             width: 250px;
             background-color: #7a7003;
-            background-image: url('https://i.imgur.com/vY2Qq3j.jpg');
             border-radius: 25px;
             color: white;
             display: flex;
@@ -260,6 +259,10 @@
         }
 
         #modalawait,
+        #modalawaitVencedores,
+        #modalawaitVencedores1,
+        #modalawaitVencedores2,
+        #modalawaitVencedores3,
         #modalawaitencerrado {
             width: 100vw;
             height: 100vh;
@@ -325,9 +328,28 @@
             }
         }
 
+        @keyframes pulse2 {
+            0% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.5);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+
         #contador,
+        .anm,
         #mensagem {
             animation: pulse 1s infinite;
+        }
+
+        .anm {
+            animation: pulse2 1s infinite;
         }
 
         #mensagem {
@@ -353,13 +375,52 @@
 <body
     style=" background-image: url('https://img.freepik.com/fotos-premium/fundo-verde-escuro-grunge-textura-de-papel-de-design-antigo-com-espaco-de-copia-e-espaco-para-texto_213524-614.jpg');background-size: cover;">
     <audio id="bip" src="https://eaglesoftware.com.br/bip.mp3"></audio>
-    <audio id="aplausos" src="//linkparadownload.com/wp-content/baixar/plateia_aplaudindo_efeito_sonoro_toquesengracadosmp3.com.mp3"></audio>
+    <audio id="aplausos" src="https://eaglesoftware.com.br/bingo/alegria.mp3"></audio>
 
     <div id="modalawait">
         <div
             style="color: white; background-color: #5ba45b; border-radius: 20px; border: 4px solid #f6f0a7; width: 70vh; height: 300px; display: flex; justify-content: center; align-items: center; ">
             <h1> Aguardando o proximo jogo </h1>
 
+        </div>
+    </div>
+
+
+    <div id="modalawaitVencedores" style="display: none;">
+        <div
+            style="color: white; background-color: #5ba45b; border-radius: 20px; border: 4px solid #f6f0a7; width: 70vw; height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; ">
+            <h3>Vencedores:</h3>
+            <h3>PREMIO 3: <br>
+                <h1 id="vencedor1M"></h1> ...
+            </h3>
+            <h3>PREMIO 2: <br>
+                <h1 id="vencedor2M"></h1> ...
+            </h3>
+            <h3>PREMIO 1: <br>
+                <h1 id="vencedor3M"></h1> ...
+            </h3>
+        </div>
+    </div>
+
+
+    <div id="modalawaitVencedores1" style="display: none;">
+        <div
+            style="color: transparent;  border-radius: 20px; width: 70vw; height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; ">
+            <img style="width: 40%; " class="anm" src="https://eaglesoftware.com.br/bingo/premio1.jpg" alt="">
+        </div>
+    </div>
+
+    <div id="modalawaitVencedores3" style="display: none;">
+        <div
+            style="color: transparent;  border-radius: 20px; width: 70vw; height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; ">
+            <img style="width: 40%; " class="anm" src="https://eaglesoftware.com.br/bingo/premio3.jpg" alt="">
+        </div>
+    </div>
+
+    <div id="modalawaitVencedores2" style="display: none;">
+        <div
+            style="color: transparent;  border-radius: 20px; width: 70vw; height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; ">
+            <img style="width: 40%; " class="anm" src="https://eaglesoftware.com.br/bingo/premio2.jpg" alt="">
         </div>
     </div>
 
@@ -428,7 +489,7 @@
         <div>
             <div
                 style="height: 90px; width: 250px; background-color: #077a03; border: 2px solid #EDE04E; border-radius: 25px; color: white; display: flex; justify-content: center; align-items: center; flex-direction: column; margin-top: 25px;">
-                <p style="margin: 0;">Premio 1</p>
+                <p style="margin: 0;">Premio 2</p>
                 <div
                     style="margin: 0;width: 90%; height: 70%; background-color: black; border-radius: 10px; display: flex; justify-content: center; align-items: center;">
                     <h2> R$ <span id="quadra"> 2.500.00 </span></h2>
@@ -437,7 +498,7 @@
 
             <div
                 style="height: 90px; width: 250px; background-color: #077a03; border: 2px solid #EDE04E; border-radius: 25px; color: white; display: flex; justify-content: center; align-items: center; flex-direction: column; margin-top: 25px;">
-                <p style="margin: 0;">Premio 2</p>
+                <p style="margin: 0;">Premio 3</p>
                 <div
                     style="margin: 0;width: 90%; height: 70%; background-color: black; border-radius: 10px; display: flex; justify-content: center; align-items: center;">
                     <h2> R$<span id="linha"> 2.500.00 </span> </h2>
@@ -461,13 +522,13 @@
         <div
             style="width: 50%; border-radius: 10px; border: 1px solid #EDE04E; background-color: #007637; height: 100%;color: white; text-align: center; ">
             <h1>Vencedores:</h1>
-            <div>PREMIO 1: <br>
+            <div>PREMIO 3: <br>
                 <div id="vencedor1"></div> ...
             </div>
             <div>PREMIO 2: <br>
                 <div id="vencedor2"></div> ...
             </div>
-            <div>PREMIO 3: <br>
+            <div>PREMIO 1: <br>
                 <div id="vencedor3"></div> ...
             </div>
         </div>
@@ -492,6 +553,8 @@
         var vencedor1 = false;
         var vencedor2 = false;
         var vencedor3 = false;
+        var anunciarVencedor1 = false
+        var anunciarVencedor2 = false
         let interval;
         var ids = [];
         var started = false;
@@ -499,6 +562,7 @@
         var valor1 = 0
         var valor2 = 0
         var valor3 = 0
+        var isStart = false
         pause_moments = false
 
         function stop() {
@@ -506,7 +570,6 @@
                 return new Promise((resolve) => {
                     setTimeout(() => {
                         // Your asynchronous operation here
-                        console.log("Operation completed after 2000 milliseconds");
 
                         // Resolve the Promise to signal completion
                         resolve();
@@ -619,9 +682,13 @@
         var randomNumber;
         var draws_with = []
         async function drawNumber() {
-            
+            verificarVencedor();
+
             if (vencedor3) {
-                document.getElementById("modalawaitencerrado").style.display = "flex";
+                clearInterval(interval)
+                setTimeout(() => {
+                    document.getElementById("modalawaitVencedores").style.display = "flex";
+                }, 20000)
             }
             if (randomNumber) {
                 drawnNumbers.push(randomNumber);
@@ -664,6 +731,7 @@
 
         async function startBingo() {
             sendMsg()
+            ws.send('EstartedTrue');
             if (interval) clearInterval(interval);
             interval = setInterval(async () => {
                 drawNumber();
@@ -699,7 +767,7 @@
             }
         }
         function verificarVencedor() {
-            
+
             const cartelas = document.querySelectorAll(".bingo-card");
 
             cartelas.forEach((cartela) => {
@@ -709,9 +777,14 @@
                 );
                 if (vencedor1 == false) {
                     if (numerosSelecionados.length >= 4) {
-                        anunciarVencedor(cartela.dataset.nome, "Quem acertou 4 números");
-                        document.getElementById("vencedor1").innerText = cartela.dataset.nome;
                         vencedor1 = true;
+                        if (anunciarVencedor1 == false) {
+                            anunciarVencedor(cartela.dataset.nome, "Quem acertou 4 números", 3);
+                        }
+                        ws.send('Vencedor1');
+                        document.getElementById("vencedor1").innerText = cartela.dataset.nome;
+                        document.getElementById("vencedor1M").innerText = cartela.dataset.nome;
+
                         distribuir_pontos(valor2, cartela.dataset.id_usuario)
                     }
                 }
@@ -720,9 +793,13 @@
                     for (let i = 0; i < 3; i++) {
                         const linha = Array.from(numeros).slice(i * 5, i * 5 + 5);
                         if (linha.every((numero) => numero.classList.contains("selected"))) {
-                            anunciarVencedor(cartela.dataset.nome, "Linha completa");
-                            document.getElementById("vencedor2").innerText = cartela.dataset.nome;
                             vencedor2 = true;
+                            if (anunciarVencedor2 == false) {
+                                anunciarVencedor(cartela.dataset.nome, "Linha completa", 2);
+                            }
+                            ws.send('Vencedor2');
+                            document.getElementById("vencedor2M").innerText = cartela.dataset.nome;
+
                             distribuir_pontos(valor3, cartela.dataset.id_usuario)
                             break;
                         }
@@ -733,9 +810,10 @@
                     // Verificar se a cartela inteira foi completada
                     if (numerosSelecionados.length === 15) {
                         vencedor3 = true;
+                        anunciarVencedor(cartela.dataset.nome, "Bingo", 1);
+                        document.getElementById("vencedor3M").innerText = cartela.dataset.nome;
                         deleteCartelas();
-                        anunciarVencedor(cartela.dataset.nome, "Bingo");
-                        document.getElementById("vencedor3").innerText = cartela.dataset.nome;
+                        ws.send('Vencedor3');
                         distribuir_pontos(valor1, cartela.dataset.id_usuario)
                         ws.send('Um vencedor foi encontrado');
                     }
@@ -758,48 +836,53 @@
         }
 
         setInterval(showCurrentTime, 1000);
-        function anunciarVencedor(nome, premio) {
+        function anunciarVencedor(nome, premio, vencedor) {
             clearInterval(interval)
             document.getElementById('aplausos').play();
-            const modal = document.createElement("div");
-            modal.innerHTML = `
-                <div style="background-color: white; padding: 20px; text-align: center; display: flex; align-items: center;">
-                    <div>
-                        <img src="https://cdn-icons-png.flaticon.com/512/3135/3135768.png" style="width: 70px; heigth: 70px; border-radius: 50%;"
-                    </div>
 
-                    <div>
-                        <h2>Parabéns, ${nome}!</h2>
-                        <p>Você ganhou o prêmio: ${premio}!</p>]
-                    </div>
-                </div>
-            `;
-            modal.style.position = "fixed";
-            modal.style.top = "0";
-            modal.style.left = "0";
-            modal.style.width = "100vw";
-            modal.style.height = "100vh";
-            modal.style.backgroundColor = "rgba(0, 0, 0, 0.7)";
-            modal.style.display = "flex";
-            modal.style.justifyContent = "center";
-            modal.style.alignItems = "center";
-            modal.style.zIndex = "1000";
-            modal.style.background = "url('https://i.pinimg.com/originals/e5/83/3e/e5833e1bea7d379f0f4e4ae250b7cf81.gif') center/cover no-repeat";
+            document.getElementById(`modalawaitVencedores${vencedor}`).style.display = 'flex'
+
+
             setTimeout(() => {
-                document.getElementById('aplausos').play();
+                document.getElementById(`modalawaitVencedores${vencedor}`).style.display = 'none'
+
+                const modal = document.createElement("div");
+                modal.innerHTML = `
+                    <div style="background-color: white; padding: 20px; text-align: center; display: flex; align-items: center;">
+                        <div>
+                            <img src="https://cdn-icons-png.flaticon.com/512/3135/3135768.png" style="width: 70px; heigth: 70px; border-radius: 50%;"
+                        </div>
+    
+                        <div>
+                            <h2>Parabéns, ${nome}!</h2>
+                            <p>Você ganhou o prêmio: ${premio}!</p>
+                        </div>
+                    </div>
+                `;
+                modal.style.position = "fixed";
+                modal.style.top = "0";
+                modal.style.left = "0";
+                modal.style.width = "100vw";
+                modal.style.height = "100vh";
+                modal.style.backgroundColor = "rgba(0, 0, 0, 0.7)";
+                modal.style.display = "flex";
+                modal.style.justifyContent = "center";
+                modal.style.alignItems = "center";
+                modal.style.zIndex = "1000";
+                modal.style.background = "url('https://i.pinimg.com/originals/e5/83/3e/e5833e1bea7d379f0f4e4ae250b7cf81.gif') center/cover no-repeat";
+
+                setTimeout(() => {
+                    modal.remove();
+                    startBingo()
+                }, 20000);
+                // Fechar o modal ao clicar fora
+
+                pause_moments = false
+
+                document.body.appendChild(modal);
             }, 5000)
-            setTimeout(() => {
-                modal.remove();
-                startBingo()
-            }, 20000);
-            // Fechar o modal ao clicar fora
-            modal.addEventListener("click", () => {
-                modal.remove();
-            });
-            pause_moments = false
 
-            document.body.appendChild(modal);
-            
+
         }
 
         function startMysql() {
@@ -863,14 +946,17 @@
                 if (Number(value.count) >= Number(quanty_start)) {
                     document.getElementById("modalawait").style.display = "none";
                     startMysql();
-
                     // Falar o número sorteado
-                    const speech = new SpeechSynthesisUtterance(`Iniciando em`);
-                    speech.lang = "pt-BR";
-                    window.speechSynthesis.speak(speech);
-                    document.getElementById("modalawaitCount").style.display = "flex";
+                    if (isStart == false) {
+                        const speech = new SpeechSynthesisUtterance(`Iniciando em`);
+                        speech.lang = "pt-BR";
+                        window.speechSynthesis.speak(speech);
+                        document.getElementById("modalawaitCount").style.display = "flex";
+
+                        iniciarContador()
+                    }
                     started = true;
-                    iniciarContador()
+
                     setTimeout((doc) => {
                         document.getElementById("modalawaitCount").style.display =
                             "none";
@@ -891,12 +977,15 @@
         if (security == true) {
             var ws = new WebSocket('wss://bingoinvict-2a0239e0c8b7.herokuapp.com');
         } else {
-            var ws = new WebSocket('ws://bingoinvict-2a0239e0c8b7.herokuapp.com');
+            var ws = new WebSocket('ws:localhost:3000');
         }
 
         ws.onmessage = function (event) {
             const data = JSON.parse(event.data);
             const randomNumber1 = data.randomNumber;
+            anunciarVencedor1 = data.vencedorIs
+            anunciarVencedor2 = data.vencedorIs2
+            isStart = data.isStart
             console.log(data)
             draws_with = data.numbers
             // Agora você pode usar `randomNumber1` para atualizar o DOM conforme necessário
@@ -938,7 +1027,7 @@
                 contador--;
 
                 document.getElementById('bip').play();
-                
+
 
 
                 // Verifica se o contador chegou a 0 e limpa o intervalo

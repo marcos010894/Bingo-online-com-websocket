@@ -18,12 +18,23 @@ const server = http.createServer((req, res) => {
 
 const wss = new WebSocket.Server({ server });
 let started = false;
+var started_client = false;
 let drawnNumbers = [];
-
+var vencedorIs = false;
+var vencedorIs2 = false;
 wss.on("connection", (ws) => {
   ws.on("message", (message) => {
-    if(message == 'Um vencedor foi encontrado'){
-      restartServer()
+    if (message == "Vencedor1") {
+      vencedorIs = true;
+    }
+    if (message == "Vencedor2") {
+      vencedorIs2 = true;
+    }
+    if (message == "EstartedTrue") {
+      started_client = true;
+    }
+    if (message == "Um vencedor foi encontrado") {
+      restartServer();
     }
     if (!started) {
       started = true;
@@ -38,7 +49,6 @@ wss.on("connection", (ws) => {
   });
 });
 
-
 async function drawNumber(wss, drawnNumbers) {
   const availableNumbers = [...Array(90).keys()]
     .map((n) => n + 1)
@@ -51,7 +61,13 @@ async function drawNumber(wss, drawnNumbers) {
   wss.clients.forEach((client) => {
     if (client.readyState === WebSocket.OPEN) {
       client.send(
-        JSON.stringify({ randomNumber: randomNumber, numbers: drawnNumbers })
+        JSON.stringify({
+          randomNumber: randomNumber,
+          numbers: drawnNumbers,
+          vencedorIs: vencedorIs,
+          vencedorIs2: vencedorIs2,
+          isStart: started_client,
+        })
       );
     }
   });
@@ -61,16 +77,15 @@ async function drawNumber(wss, drawnNumbers) {
 
 server.listen(port);
 
-
-
-
-
 function restartServer() {
   clearInterval(intervalId); // Limpa o intervalo existente
 
   // Reinicializa as variáveis e lógica necessárias
   started = false;
   drawnNumbers = [];
+  started_client = false;
+  vencedorIs = false;
+  vencedorIs2 = false;
   // Inicia novamente o intervalo, se a lógica original exigir
   intervalId = setInterval(() => {
     if (drawnNumbers.length >= 90) {
