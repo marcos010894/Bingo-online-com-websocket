@@ -362,6 +362,8 @@
         .bingo-card-header {
             color: white;
             text-align: center;
+            width: 75%;
+            word-break: break-all;
         }
 
         .bkg_image {
@@ -383,9 +385,10 @@
 
     <div id="modalawait">
         <div
-            style="color: white; background-color: #5ba45b; border-radius: 20px; border: 4px solid #f6f0a7; width: 70vh; height: 300px; display: flex; justify-content: center; align-items: center; ">
+            style="color: white; background-color: #5ba45b; border-radius: 20px; border: 4px solid #f6f0a7; width: 70vh; height: 300px; display: flex; justify-content: center; align-items: center; flex-direction: column">
             <h1> Aguardando o proximo jogo </h1>
-
+            <h4>Está faltando: <span id="faltando"> </span> cartelas </h4>
+            <h4>Número do proximo jogo: <span id="proximo"></span></h4>
         </div>
     </div>
 
@@ -436,10 +439,10 @@
         <h1> Bingo Finalizado, atualieze a pagina para o proximo jogo ... </h1>
     </div>
     <div id="headers">
-        <div class="premio-container">
-            <p>PREMIO FINAL</p>
+        <div class="premio-container" style=" background-color: #077a03; border: 2px solid #EDE04E;">
+            <p>PREMIO QUADRA</p>
             <div class="valor">
-                <h2>R$ <span id="bingo"> 2.500.00 </span></h2>
+                <h2>R$ <span id="quadra"> 2.500.00 </span></h2>
             </div>
         </div>
         <div>
@@ -457,7 +460,7 @@
 
             <div
                 style="height: 90px; width: 200px; margin-left: 60px; background-color: #077a03; border: 2px solid #dbd9c4; border-radius: 25px; color: white; display: flex; justify-content: center; align-items: center; flex-direction: column;">
-                <p style="margin: 0;">N* Sorteio</p>
+                <p style="margin: 0;">Nº Sorteio</p>
                 <div
                     style="margin: 0;width: 90%; height: 70%; border: 1px solid #a69905; background-color: rgb(1, 1, 26); border-radius: 10px; display: flex; justify-content: center; align-items: center;">
                     <h2 id="numeroBingo"> 000001 </h2>
@@ -493,19 +496,17 @@
         <div>
             <div
                 style="height: 90px; width: 250px; background-color: #077a03; border: 2px solid #EDE04E; border-radius: 25px; color: white; display: flex; justify-content: center; align-items: center; flex-direction: column; margin-top: 25px;">
-                <p style="margin: 0;">Premio 2</p>
+                <p style="margin: 0;">Premio LINHA</p>
                 <div
                     style="margin: 0;width: 90%; height: 70%; background-color: black; border-radius: 10px; display: flex; justify-content: center; align-items: center;">
-                    <h2> R$ <span id="quadra"> 2.500.00 </span></h2>
+                    <h2> R$ <span id="linha"> 2.500.00 </span></h2>
                 </div>
             </div>
 
-            <div
-                style="height: 90px; width: 250px; background-color: #077a03; border: 2px solid #EDE04E; border-radius: 25px; color: white; display: flex; justify-content: center; align-items: center; flex-direction: column; margin-top: 25px;">
-                <p style="margin: 0;">Premio 3</p>
-                <div
-                    style="margin: 0;width: 90%; height: 70%; background-color: black; border-radius: 10px; display: flex; justify-content: center; align-items: center;">
-                    <h2> R$<span id="linha"> 2.500.00 </span> </h2>
+            <div class="premio-container" style="margin-top: 50px;">
+                <p>BINGO</p>
+                <div class="valor">
+                    <h2>R$ <span id="bingo"> 2.500.00 </span></h2>
                 </div>
             </div>
         </div>
@@ -605,7 +606,6 @@
             card.dataset.id_usuario = cartela.id_usuario;
             cardContainer.appendChild(card);
 
-            console.log(numbers);
             return cardContainer;
         }
 
@@ -703,7 +703,6 @@
                 const cells = document.querySelectorAll(".bingo-cell");
                 cells.forEach(async (cell) => {
                     var result = await draws_with.find(element => element === parseInt(cell.textContent))
-                    console.log('numero sorteado: ', result)
                     if (parseInt(cell.textContent) === result) {
                         cell.classList.add("selected");
                     }
@@ -711,7 +710,6 @@
                 const numberDivs = document.querySelectorAll(".number");
                 numberDivs.forEach(async (div) => {
                     var result = await draws_with.find(element => element === parseInt(div.textContent))
-                    console.log('numero sorteado: ', result)
                     if (parseInt(div.textContent) === result) {
                         div.classList.add("drawn");
                     }
@@ -811,9 +809,13 @@
                 }
 
                 if (vencedor3 == false) {
+
                     // Verificar se a cartela inteira foi completada
                     if (numerosSelecionados.length === 15) {
                         vencedor3 = true;
+                        const speech = new SpeechSynthesisUtterance(`BINGO`);
+                        speech.lang = "pt-BR";
+                        window.speechSynthesis.speak(speech);
                         anunciarVencedor(cartela.dataset.nome, "Bingo", 1);
                         document.getElementById("vencedor3M").innerText = cartela.dataset.nome;
                         deleteCartelas();
@@ -900,6 +902,7 @@
             $.get(url + "getNumeroBingo.php", function (data) {
                 value = JSON.parse(data);
                 document.getElementById("numeroBingo").innerText = value.count;
+                document.getElementById("proximo").innerText = value.count;
             });
         }
 
@@ -910,7 +913,6 @@
 
                 });
             }).then(() => {
-                console.log('bingo deletado')
                 started = true
             });
         }
@@ -951,6 +953,8 @@
                 await getPremios(Number(value.count));
                 await getNumeroBingo();
                 await buscarCartelas();
+                let faltando = Number(quanty_start) - Number(value.count)
+                document.getElementById('faltando').innerText = faltando
                 if (Number(value.count) >= Number(quanty_start)) {
                     document.getElementById("modalawait").style.display = "none";
                     startMysql();
@@ -994,10 +998,8 @@
             anunciarVencedor1 = data.vencedorIs
             anunciarVencedor2 = data.vencedorIs2
             isStart = data.isStart
-            console.log(data)
             draws_with = data.numbers
             // Agora você pode usar `randomNumber1` para atualizar o DOM conforme necessário
-            console.log('Número sorteado:', randomNumber1);
             randomNumber = randomNumber1;
             // ... coloque aqui o código para atualizar o DOM ...
         };
