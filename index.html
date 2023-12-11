@@ -831,7 +831,7 @@
                         window.speechSynthesis.speak(speech);
                         anunciarVencedor(cartela.dataset.nome, "Bingo", 1, cartela.dataset.id_usuario);
                         document.getElementById("vencedor3M").innerText = cartela.dataset.nome;
-                        //deleteCartelas();
+                        deleteCartelas();
                         ws.send('Vencedor3');
                         distribuir_pontos(valor1, cartela.dataset.id_usuario)
                         ws.send('Um vencedor foi encontrado');
