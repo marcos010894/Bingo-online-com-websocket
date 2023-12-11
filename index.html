@@ -387,13 +387,18 @@
 
 <body
     style=" background-image: url('https://img.freepik.com/fotos-premium/fundo-verde-escuro-grunge-textura-de-papel-de-design-antigo-com-espaco-de-copia-e-espaco-para-texto_213524-614.jpg');background-size: cover;">
-    <audio id="bip" src="https://eaglesoftware.com.br/bip.mp3"></audio>
+    <audio id="bip" src="https://eaglesoftware.com.br/bingo/10a1.mp3"></audio>
 
     <audio id="aplausos">
         <source src="https://eaglesoftware.com.br/bingo/alegria.mp3" type="audio/mp3">
         Seu navegador não suporta a tag de áudio.
     </audio>
-
+    <div style="display: none;">
+        <video title="Advertisement"
+            style="background-color: rgb(0, 0, 0); position: absolute; width: 640px; height: 360px;"
+            src="http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" autoplay="true"
+            muted="muted"></video>
+    </div>
     <audio id="1">
         <source src="https://eaglesoftware.com.br/bingo/1.mp3" type="audio/mp3">
         Seu navegador não suporta a tag de áudio.
@@ -420,18 +425,18 @@
 
     <div id="modalawaitVencedores" style="display: none;">
         <div
-            style="color: white;             background-image: url('https://eaglesoftware.com.br/bingo/capa.jpg');
-            background-size: contain;
-            background-repeat: no-repeat; border-radius: 20px; border: 4px solid #f6f0a7; width: 500px; height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; ">
+            style="color: #94fff1;             background-image: url('https://eaglesoftware.com.br/bingo/capa.jpg');
+            background-size: cover;
+            background-repeat: no-repeat; border-radius: 20px; border: 4px solid #f6f0a7; width: 65vw; height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; ">
             <h3 style="color: white;">Vencedores:</h3>
             <h3 style="color: white;">3º PREMIO: QUADRA <br>
-                <h1 id="vencedor1M"></h1> ...
+                <h1 class="anm" id="vencedor1M"></h1> ...
             </h3>
             <h3 style="color: white;">2º PREMIO: LINHA<br>
-                <h1 id="vencedor2M"></h1> ...
+                <h1 class="anm" id="vencedor2M"></h1> ...
             </h3>
-            <h3 style="color: white;"       >1º PREMIO: BINGO<br>
-                <h1 id="vencedor3M"></h1> ...
+            <h3 style="color: white;">1º PREMIO: BINGO<br>
+                <h1 class="anm" id="vencedor3M"></h1> ...
             </h3>
         </div>
     </div>
@@ -590,13 +595,13 @@
         let interval;
         var ids = [];
         var started = false;
-        var url = 'https://eaglesoftware.com.br/apibingo/'
+        var url = 'https://escritorio.invictplanet.com/apibingo/'
         var valor1 = 0
         var valor2 = 0
         var valor3 = 0
         var isStart = false
         pause_moments = false
-
+        var numMoment = ''
         function stop() {
             if (pause_moments) {
                 return new Promise((resolve) => {
@@ -658,33 +663,7 @@
             }
         }
 
-        async function saveBingoCard(idUsuario, nomeUsuario, numerosCartela) {
-            const data = {
-                id_usuario: idUsuario,
-                nome_usuario: nomeUsuario,
-                cartela: numerosCartela,
-                data_compra: new Date().toISOString().slice(0, 10),
-            };
 
-            try {
-                // Substitua a URL pelo endereço da sua API.
-                const response = await fetch(url + "https://sua-api.com/salvar_cartela", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify(data),
-                });
-
-                if (response.ok) {
-                    const responseData = await response.json();
-                } else {
-                    console.error("Erro ao salvar cartela:", response.statusText);
-                }
-            } catch (error) {
-                console.error("Erro ao salvar cartela:", error);
-            }
-        }
 
         function updateLastDrawnNumbers() {
             const numberantigoone = document.getElementById("numberantigoone");
@@ -808,7 +787,7 @@
                     if (numerosSelecionados.length >= 4) {
                         vencedor1 = true;
                         if (anunciarVencedor1 == false) {
-                            anunciarVencedor(cartela.dataset.nome, "Quem acertou 4 números", 3);
+                            anunciarVencedor(cartela.dataset.nome, "Quem acertou 4 números", 3, cartela.dataset.id_usuario);
                             document.getElementById('3').play();
                         }
                         ws.send('Vencedor1');
@@ -827,7 +806,7 @@
                             vencedor2 = true;
 
                             if (anunciarVencedor2 == false) {
-                                anunciarVencedor(cartela.dataset.nome, "Linha completa", 2);
+                                anunciarVencedor(cartela.dataset.nome, "Linha completa", 2, cartela.dataset.id_usuario);
                                 document.getElementById('2').play();
 
                             }
@@ -850,9 +829,9 @@
                         const speech = new SpeechSynthesisUtterance(`BINGO`);
                         speech.lang = "pt-BR";
                         window.speechSynthesis.speak(speech);
-                        anunciarVencedor(cartela.dataset.nome, "Bingo", 1);
+                        anunciarVencedor(cartela.dataset.nome, "Bingo", 1, cartela.dataset.id_usuario);
                         document.getElementById("vencedor3M").innerText = cartela.dataset.nome;
-                        deleteCartelas();
+                        //deleteCartelas();
                         ws.send('Vencedor3');
                         distribuir_pontos(valor1, cartela.dataset.id_usuario)
                         ws.send('Um vencedor foi encontrado');
@@ -874,15 +853,43 @@
 
             currentTimeElement.textContent = `${hours}:${minutes}:${seconds}`;
         }
-
+        var url_image = ''
         setInterval(showCurrentTime, 1000);
-        function anunciarVencedor(nome, premio, vencedor) {
+        async function anunciarVencedor(nome, premio, vencedor, id) {
             clearInterval(interval)
+            await $.get(`${url}/foto.php?id=${id}`, function (data) {
+                url_image = data[0].foto_perfil
+            });
+            $.ajax({
+                url: url+'salvarGanhadores.php', // Substitua pela URL real do seu script PHP
+                type: 'POST',
+                data: {
+                    name: nome,
+                    foto: url_image,
+                    premio: premio,
+                    numeroPremio: numMoment
+                },
+                dataType: 'text', // ou 'json' se seu script PHP retorna JSON
+
+                success: function (response) {
+                    console.log('Sucesso:', response);
+                    // Faça algo com a resposta do servidor, se necessário
+                },
+
+                error: function (xhr, status, error) {
+                    console.log('Erro:', error);
+                    // Trate o erro, se necessário
+                }
+            });
             document.getElementById('aplausos').play();
 
             document.getElementById(`modalawaitVencedores${vencedor}`).style.display = 'flex'
 
-
+            let registerVencedot = {
+                nome: String,
+                premio: String,
+                foto: String
+            }
             setTimeout(() => {
                 document.getElementById(`modalawaitVencedores${vencedor}`).style.display = 'none'
                 document.getElementById('aplausos').play();
@@ -891,7 +898,7 @@
                 modal.innerHTML = `
                     <div style="background-color: white; padding: 20px; text-align: center; display: flex; align-items: center;">
                         <div>
-                            <img src="https://cdn-icons-png.flaticon.com/512/3135/3135768.png" style="width: 70px; heigth: 70px; border-radius: 50%;"
+                            <img src="https://escritorio.invictplanet.com/painel/media/imagens/fotos_perfil/${url_image}" style="width: 70px; heigth: 70px; border-radius: 50%;"
                         </div>
     
                         <div>
@@ -936,6 +943,7 @@
             $.get(url + "getNumeroBingo.php", function (data) {
                 value = JSON.parse(data);
                 document.getElementById("numeroBingo").innerText = value.count;
+                numMoment = value.count;
                 document.getElementById("proximo").innerText = value.count;
             });
         }
@@ -954,7 +962,7 @@
     <script>
         var quanty_start = "";
 
-        var url = "https://eaglesoftware.com.br/apibingo/";
+        var url = "https://escritorio.invictplanet.com/apibingo/";
 
         function fetchDataQuanties() {
             $.get(url + "verifyQuantitysstart.php", function (data) {
@@ -965,7 +973,9 @@
             });
         }
         fetchDataQuanties();
+        async function getImage(id) {
 
+        }
         function getPremios(quantiesPrimios) {
             $.get(url + "getpremios.php", function (data) {
                 let value = JSON.parse(data);
@@ -1023,7 +1033,7 @@
         if (security == true) {
             var ws = new WebSocket('wss://bingoinvict-2a0239e0c8b7.herokuapp.com');
         } else {
-            var ws = new WebSocket('ws://bingoinvict-2a0239e0c8b7.herokuapp.com');
+            var ws = new WebSocket('ws://localhost:3000');
         }
 
         ws.onmessage = function (event) {
@@ -1071,6 +1081,9 @@
                 contador--;
 
                 document.getElementById('bip').play();
+                setTimeout(() => {
+
+                }, 1000)
 
 
 
