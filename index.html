@@ -387,10 +387,10 @@
 
 <body
     style=" background-image: url('https://img.freepik.com/fotos-premium/fundo-verde-escuro-grunge-textura-de-papel-de-design-antigo-com-espaco-de-copia-e-espaco-para-texto_213524-614.jpg');background-size: cover;">
-    <audio id="bip" src="https://eaglesoftware.com.br/bingo/10a1.mp3"></audio>
+    <audio id="bip" src="https://escritorio.invictplanet.com/bingo/10a1.mp3"></audio>
 
     <audio id="aplausos">
-        <source src="https://eaglesoftware.com.br/bingo/alegria.mp3" type="audio/mp3">
+        <source src="https://escritorio.invictplanet.com/bingo/alegria.mp3" type="audio/mp3">
         Seu navegador não suporta a tag de áudio.
     </audio>
     <div style="display: none;">
@@ -400,17 +400,17 @@
             muted="muted"></video>
     </div>
     <audio id="1">
-        <source src="https://eaglesoftware.com.br/bingo/1.mp3" type="audio/mp3">
+        <source src="https://escritorio.invictplanet.com/bingo/1.mp3" type="audio/mp3">
         Seu navegador não suporta a tag de áudio.
     </audio>
 
     <audio id="2">
-        <source src="https://eaglesoftware.com.br/bingo/2.mp3" type="audio/mp3">
+        <source src="https://escritorio.invictplanet.com/bingo/2.mp3" type="audio/mp3">
         Seu navegador não suporta a tag de áudio.
     </audio>
 
     <audio id="3">
-        <source src="https://eaglesoftware.com.br/bingo/3.mp3" type="audio/mp3">
+        <source src="https://escritorio.invictplanet.com/bingo/3.mp3" type="audio/mp3">
         Seu navegador não suporta a tag de áudio.
     </audio>
     <div id="modalawait">
@@ -425,7 +425,7 @@
 
     <div id="modalawaitVencedores" style="display: none;">
         <div
-            style="color: #94fff1;             background-image: url('https://eaglesoftware.com.br/bingo/capa.jpg');
+            style="color: #94fff1;             background-image: url('https://escritorio.invictplanet.com/bingo/capa.jpg');
             background-size: cover;
             background-repeat: no-repeat; border-radius: 20px; border: 4px solid #f6f0a7; width: 65vw; height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; ">
             <h3 style="color: white;">Vencedores:</h3>
@@ -445,21 +445,21 @@
     <div id="modalawaitVencedores1" style="display: none;">
         <div
             style="color: transparent;  border-radius: 20px; width: 70vw; height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; ">
-            <img style="width: 40%; " class="anm" src="https://eaglesoftware.com.br/bingo/premio1.jpg" alt="">
+            <img style="width: 40%; " class="anm" src="https://escritorio.invictplanet.com/bingo/premio1.jpg" alt="">
         </div>
     </div>
 
     <div id="modalawaitVencedores3" style="display: none;">
         <div
             style="color: transparent;  border-radius: 20px; width: 70vw; height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; ">
-            <img style="width: 40%; " class="anm" src="https://eaglesoftware.com.br/bingo/premio3.jpg" alt="">
+            <img style="width: 40%; " class="anm" src="https://escritorio.invictplanet.com/bingo/premio3.jpg" alt="">
         </div>
     </div>
 
     <div id="modalawaitVencedores2" style="display: none;">
         <div
             style="color: transparent;  border-radius: 20px; width: 70vw; height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; ">
-            <img style="width: 40%; " class="anm" src="https://eaglesoftware.com.br/bingo/premio2.jpg" alt="">
+            <img style="width: 40%; " class="anm" src="https://escritorio.invictplanet.com/bingo/premio2.jpg" alt="">
         </div>
     </div>
 
@@ -692,14 +692,9 @@
         var randomNumber;
         var draws_with = []
         async function drawNumber() {
-            verificarVencedor();
+            await verificarVencedor();
 
-            if (vencedor3) {
-                clearInterval(interval)
-                setTimeout(() => {
-                    document.getElementById("modalawaitVencedores").style.display = "flex";
-                }, 20000)
-            }
+
             if (randomNumber) {
                 drawnNumbers.push(randomNumber);
                 lastNumbers.innerHTML =
@@ -829,6 +824,7 @@
                         const speech = new SpeechSynthesisUtterance(`BINGO`);
                         speech.lang = "pt-BR";
                         window.speechSynthesis.speak(speech);
+                        clearInterval(interval)
                         anunciarVencedor(cartela.dataset.nome, "Bingo", 1, cartela.dataset.id_usuario);
                         document.getElementById("vencedor3M").innerText = cartela.dataset.nome;
                         deleteCartelas();
@@ -861,7 +857,7 @@
                 url_image = data[0].foto_perfil
             });
             $.ajax({
-                url: url+'salvarGanhadores.php', // Substitua pela URL real do seu script PHP
+                url: url + 'salvarGanhadores.php', // Substitua pela URL real do seu script PHP
                 type: 'POST',
                 data: {
                     name: nome,
@@ -919,11 +915,20 @@
                 modal.style.zIndex = "1000";
                 modal.style.background = "url('https://i.pinimg.com/originals/e5/83/3e/e5833e1bea7d379f0f4e4ae250b7cf81.gif') center/cover no-repeat";
 
+
                 setTimeout(() => {
                     modal.remove();
                     document.getElementById('aplausos').pause();
+                    if (vencedor3 == true) {
+                        clearInterval(interval)
+                        setTimeout(() => {
+                            document.getElementById("modalawaitVencedores").style.display = "flex";
+                        }, 20000)
 
-                    startBingo()
+                    } else {
+                        startBingo()
+
+                    }
                 }, 10000);
                 // Fechar o modal ao clicar fora
 
@@ -1010,14 +1015,23 @@
                         document.getElementById("modalawaitCount").style.display = "flex";
 
                         iniciarContador()
-                    }
-                    started = true;
+                        started = true;
 
-                    setTimeout((doc) => {
-                        document.getElementById("modalawaitCount").style.display =
-                            "none";
-                        startBingo();
-                    }, 12000);
+                        setTimeout((doc) => {
+                            document.getElementById("modalawaitCount").style.display =
+                                "none";
+                            startBingo();
+                        }, 12000);
+                    } else {
+                        started = true;
+
+                        setTimeout((doc) => {
+                            document.getElementById("modalawaitCount").style.display =
+                                "none";
+                            startBingo();
+                        }, 2);
+                    }
+
                 }
             });
         }
@@ -1070,6 +1084,12 @@
 
 
         function iniciarContador() {
+            console.log(isStart)
+            if (isStart == true) {
+                document.getElementById("modalawaitCount").style.display =
+                    "none";
+                return false
+            }
 
 
             var contador = 10;
