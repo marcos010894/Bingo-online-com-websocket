@@ -875,6 +875,7 @@
 
                     // Verificar se a cartela inteira foi completada
                     if (numerosSelecionados.length === 15) {
+                        setInterval(restpage, 10000)
                         vencedor3 = true;
                         document.getElementById('1').play();
                         const speech = new SpeechSynthesisUtterance(`BINGO`);
@@ -887,12 +888,17 @@
                         ws.send('Vencedor3');
                         distribuir_pontos(valor1, cartela.dataset.id_usuario)
                         ws.send('Um vencedor foi encontrado');
+                        
                     }
                 }
             });
         }
 
         buscarCartelas();
+
+        function restpage(){
+            window.location.reload(true)
+        }
         const drawnNumbers = [];
         createAllNumbers(); // Crie a lista de números de 1 a 90
 
@@ -1019,7 +1025,7 @@
                 started = true
             });
 
-            window.location.reload(true)
+       
         }
     </script>
     <script>
