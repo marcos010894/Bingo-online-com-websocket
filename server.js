@@ -37,7 +37,7 @@ wss.on("connection", (ws) => {
       started_client = true;
     }
     if (message == "Um vencedor foi encontrado") {
-      restartServer();
+      //reiniciar servidor
     }
     if (!started) {
       started = true;
