@@ -10,7 +10,6 @@ const server = http.createServer((req, res) => {
   fs.readFile("index.html", (err, data) => {
     if (err) {
       console.log(err);
-      res.end();
     } else {
       res.end(data);
     }
@@ -44,7 +43,6 @@ wss.on("connection", (ws) => {
       const intervalId = setInterval(() => {
         if (drawnNumbers.length >= 90) {
           drawnNumbers = [];
-          res.end();
         }
         drawNumber(wss, drawnNumbers);
       }, 5000); // Sorteia um número a cada 5 segundos
@@ -102,7 +100,7 @@ function restartServer() {
   }, 5000);
 }
 
-var security = true
+var security = false
 if (security == true) {
     var ws = new WebSocket('wss://bingoinvict-2a0239e0c8b7.herokuapp.com');
 } else {
