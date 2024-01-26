@@ -762,6 +762,7 @@
                     var result = await draws_with.find(element => element === parseInt(cell.textContent))
                     if (parseInt(cell.textContent) === result) {
                         cell.classList.add("selected");
+                        verificarVencedor()
                     }
                 });
                 const numberDivs = document.querySelectorAll(".number");
@@ -875,7 +876,7 @@
 
                     // Verificar se a cartela inteira foi completada
                     if (numerosSelecionados.length === 15) {
-                        setInterval(restpage, 10000)
+                        setInterval(restpage, 50000)
                         vencedor3 = true;
                         document.getElementById('1').play();
                         const speech = new SpeechSynthesisUtterance(`BINGO`);
@@ -977,20 +978,20 @@
                 modal.style.zIndex = "1000";
                 modal.style.background = "url('https://i.pinimg.com/originals/e5/83/3e/e5833e1bea7d379f0f4e4ae250b7cf81.gif') center/cover no-repeat";
 
+                if (vencedor3 == true) {
+                    clearInterval(interval)
+                    setTimeout(() => {
+                        document.getElementById("modalawaitVencedores").style.display = "flex";
+                    }, 15000)
 
+                } else {
+                    startBingo()
+
+                }
                 setTimeout(() => {
                     modal.remove();
                     document.getElementById('aplausos').pause();
-                    if (vencedor3 == true) {
-                        clearInterval(interval)
-                        setTimeout(() => {
-                            document.getElementById("modalawaitVencedores").style.display = "flex";
-                        }, 20000)
 
-                    } else {
-                        startBingo()
-
-                    }
                 }, 10000);
                 // Fechar o modal ao clicar fora
 
