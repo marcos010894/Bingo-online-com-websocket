@@ -100,7 +100,7 @@ function restartServer() {
   }, 5000);
 }
 
-var security = false
+var security = true
 if (security == true) {
     var ws = new WebSocket('wss://bingoinvict-2a0239e0c8b7.herokuapp.com');
 } else {
